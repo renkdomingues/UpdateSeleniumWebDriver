@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.prgBarDownload = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblDirectory = new System.Windows.Forms.Label();
             this.btnFechar = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.pnlDownload = new System.Windows.Forms.Panel();
@@ -63,15 +63,15 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Download em progresso...";
             // 
-            // label2
+            // lblDirectory
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(137, 121);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(162, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Seu download finalizará logo!";
+            this.lblDirectory.AutoSize = true;
+            this.lblDirectory.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lblDirectory.Location = new System.Drawing.Point(137, 121);
+            this.lblDirectory.Name = "lblDirectory";
+            this.lblDirectory.Size = new System.Drawing.Size(162, 13);
+            this.lblDirectory.TabIndex = 2;
+            this.lblDirectory.Text = "Seu download finalizará logo!";
             // 
             // btnFechar
             // 
@@ -103,7 +103,7 @@
             // 
             this.pnlDownload.Controls.Add(this.label1);
             this.pnlDownload.Controls.Add(this.prgBarDownload);
-            this.pnlDownload.Controls.Add(this.label2);
+            this.pnlDownload.Controls.Add(this.lblDirectory);
             this.pnlDownload.Location = new System.Drawing.Point(4, 11);
             this.pnlDownload.Name = "pnlDownload";
             this.pnlDownload.Size = new System.Drawing.Size(434, 186);
@@ -170,7 +170,7 @@
 
         private ProgressBar prgBarDownload;
         private Label label1;
-        private Label label2;
+        private Label lblDirectory;
         private Button btnFechar;
         private Label lblStatus;
         private Panel pnlDownload;

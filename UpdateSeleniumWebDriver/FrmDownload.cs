@@ -145,9 +145,24 @@ namespace UpdateSeleniumWebDriver
                 ZipFile.ExtractToDirectory(driver, Directory.GetCurrentDirectory());
                 btnFechar.Enabled = true;
                 lblStatus.Text = "Download feito com sucesso, feche este formulário.";
+                lblDirectory.Text = "Abri o local do arquivo";
+                lblDirectory.Click += new EventHandler(lblDirectory_Click);
+                lblDirectory.Cursor = Cursors.Hand;
                 isCompleted = false;
                 timer1.Stop();
             }
+        }
+
+        private void lblDirectory_Click(object sender, EventArgs e)
+        {
+            string path = driver.Substring(0, driver.LastIndexOf("\\"));
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                Arguments = path,
+                FileName = "explorer.exe"
+            };
+
+            Process.Start(startInfo);
         }
     }
 }
