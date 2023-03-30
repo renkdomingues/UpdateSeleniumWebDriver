@@ -34,11 +34,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnFechar = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlDownload = new System.Windows.Forms.Panel();
             this.pnlArqExiste = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlDownload.SuspendLayout();
             this.pnlArqExiste.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -47,6 +47,7 @@
             // prgBarDownload
             // 
             this.prgBarDownload.Location = new System.Drawing.Point(7, 143);
+            this.prgBarDownload.MarqueeAnimationSpeed = 20;
             this.prgBarDownload.Name = "prgBarDownload";
             this.prgBarDownload.Size = new System.Drawing.Size(418, 23);
             this.prgBarDownload.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
@@ -90,18 +91,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblStatus.Location = new System.Drawing.Point(193, 11);
+            this.lblStatus.Location = new System.Drawing.Point(193, 10);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(51, 13);
             this.lblStatus.TabIndex = 4;
             this.lblStatus.Text = "Aguarde";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblStatus.TextChanged += new System.EventHandler(this.lblStatus_TextChanged);
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // pnlDownload
             // 
@@ -129,9 +125,9 @@
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label3.Location = new System.Drawing.Point(42, 81);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(331, 25);
+            this.label3.Size = new System.Drawing.Size(323, 25);
             this.label3.TabIndex = 1;
-            this.label3.Text = "A versão mais recente já está baixada!";
+            this.label3.Text = "Você já possui a versão mais recente.";
             // 
             // panel1
             // 
@@ -140,6 +136,11 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(434, 37);
             this.panel1.TabIndex = 7;
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // frmDownload
             // 
@@ -154,6 +155,7 @@
             this.Name = "frmDownload";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WebDriver Downloader";
+            this.Load += new System.EventHandler(this.frmDownload_Load);
             this.pnlDownload.ResumeLayout(false);
             this.pnlDownload.PerformLayout();
             this.pnlArqExiste.ResumeLayout(false);
@@ -171,10 +173,10 @@
         private Label label2;
         private Button btnFechar;
         private Label lblStatus;
-        private System.Windows.Forms.Timer timer1;
         private Panel pnlDownload;
         private Panel pnlArqExiste;
         private Label label3;
         private Panel panel1;
+        private System.Windows.Forms.Timer timer1;
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Net;
@@ -9,16 +11,15 @@ namespace UpdateSeleniumWebDriver
     {
         static string version;
         static string driver = "";
+        static bool? isCompleted = null;
 
         public frmDownload()
         {
             InitializeComponent();
-            Download();
         }
 
         private void Download()
         {
-
             var psi = new ProcessStartInfo("wmic");
             psi.Arguments = @"datafile where 'name=""C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe""' get version";
             psi.WindowStyle = ProcessWindowStyle.Hidden;
@@ -35,12 +36,15 @@ namespace UpdateSeleniumWebDriver
                 version = output.Replace("Version", "").Trim();
                 DownloadWebDriver();
             }
+
+            
         }
-        
+
         private void DownloadWebDriver()
         {
             var downloadURL = "https://msedgedriver.azureedge.net/" + version + "/edgedriver_win32.zip";
             driver = Directory.GetFiles(Directory.GetCurrentDirectory(), "*" + version + "*").ToList().FirstOrDefault();
+            
             var lstDrivers = Directory.GetFiles(Directory.GetCurrentDirectory(), "edge*").ToList();
             if (string.IsNullOrEmpty(driver))
             {
@@ -59,35 +63,61 @@ namespace UpdateSeleniumWebDriver
                 }
 
                 pnlDownload.Visible = true;
-                DownloadFileInBackGround(downloadURL);
+                DownloadFileInBackGroundAsync(downloadURL);
             }
             else
             {
                 pnlArqExiste.Visible = true;
                 btnFechar.Enabled = true;
                 lblStatus.Text = "Para continuar, feche este formulário.";
+                //OU FECHAR O FORM
             }
                
 
         }
 
-        private void DownloadFileInBackGround(string url)
+        private void DownloadFileInBackGroundAsync(string url)
         {
-            timer1.Start();
-            using (var cliente = new WebClient())
+            Thread thread = new Thread((p) =>
             {
-                cliente.DownloadFile(url, Path.Combine(Directory.GetCurrentDirectory(), "edgedriver_" + version + ".zip"));
-                ZipFile.ExtractToDirectory(driver, Directory.GetCurrentDirectory());
+                WebClient cliente = new WebClient();
+                cliente.DownloadProgressChanged += Client_DownloadProgressChanged1;
+                cliente.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFileCallback2);
+                cliente.DownloadFileAsync(new Uri(url), Path.Combine(Directory.GetCurrentDirectory(), "edgedriver_" + version + ".zip"));
+                   
+                return;
+            });
+            thread.Start();
+            
+        }
 
-                if(File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "msedgedriver.exe")))
-                {
-                    btnFechar.Enabled = true;
-                    lblStatus.Text = "Download feito com sucesso, feche este formulário.";
-                    prgBarDownload.Style = ProgressBarStyle.Continuous;
-                    prgBarDownload.MarqueeAnimationSpeed = 0;
-                }
+        private void DownloadFileCallback2(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                Console.WriteLine("File download cancelled.");
             }
-            timer1.Stop();
+
+            if (e.Error != null)
+            {
+                Console.WriteLine(e.Error.ToString());
+            }
+
+            isCompleted = true;
+            timer1.Start();
+        }
+
+        private void Client_DownloadProgressChanged1(object sender, DownloadProgressChangedEventArgs e)
+        {
+            this.BeginInvoke((MethodInvoker)delegate {
+                double bytesIn = double.Parse(e.BytesReceived.ToString());
+                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+                double percentage = bytesIn / totalBytes * 100;
+
+                if(percentage > 0)
+                    prgBarDownload.Value = Convert.ToInt32(percentage);
+                // you can use to show to calculated % of download
+            });
         }
 
         private void btnFechar_Click(object sender, EventArgs e)
@@ -95,20 +125,29 @@ namespace UpdateSeleniumWebDriver
             Close();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if(prgBarDownload.Value >= 100)
-                prgBarDownload.Value = 100;
-            else
-                prgBarDownload.Value += 5;
-        }
-
         private void lblStatus_TextChanged(object sender, EventArgs e)
         {
-            int x = (panel1.Size.Width - lblStatus.Width) / 2;
+            int x = (panel1.Size.Width / 2) - lblStatus.Text.Length * 3;
             int y = (panel1.Size.Height - lblStatus.Height) / 2;
 
             lblStatus.Location = new Point(x, y);
+        }
+
+        private void frmDownload_Load(object sender, EventArgs e)
+        {
+            Download();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (isCompleted == true)
+            {
+                ZipFile.ExtractToDirectory(driver, Directory.GetCurrentDirectory());
+                btnFechar.Enabled = true;
+                lblStatus.Text = "Download feito com sucesso, feche este formulário.";
+                isCompleted = false;
+                timer1.Stop();
+            }
         }
     }
 }
